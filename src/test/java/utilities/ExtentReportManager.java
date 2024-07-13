@@ -18,9 +18,10 @@ import testBase.BaseClass;
 
 
 public class ExtentReportManager implements ITestListener {
+	private static String html;
 	public ExtentSparkReporter sparkReporter;
 	public ExtentReports extent;
-	public ExtentTest test;
+	public static ExtentTest test;
 
 	String repName;
 	public String reportPath = "src/test/resources/reports/";

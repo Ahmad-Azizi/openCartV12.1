@@ -62,6 +62,6 @@ public class TC003_LoginDDT extends BaseClass {
 
         }
         logger.info("***** Finished TC003_LoginDDT *****");
-        Thread.sleep(3000);
+        Thread.sleep(1000);
     }
 }

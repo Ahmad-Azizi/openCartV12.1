@@ -9,10 +9,12 @@ import testBase.BaseClass;
 
 public class TC002_LoginTest extends BaseClass {
 
-    @Test(groups = {"Sanity", "Master"})
+    @Test(groups = {"Sanity", "Regression", "Master"})
     public void verify_login(){
 
         logger.info("****** Starting TC_002_LoginTest *****");
+
+
 
         //HomePage
         HomePage hp=new HomePage(driver);

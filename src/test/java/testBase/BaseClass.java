@@ -16,6 +16,7 @@ import org.openqa.selenium.safari.SafariDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Parameters;
+import utilities.ExtentReportManager;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -30,12 +31,12 @@ public class BaseClass {
     public Logger logger;
     public Properties p;
 
-    @BeforeClass(groups = {"Sanity", "Regression","Master"})
+    @BeforeClass(groups = {"Sanity", "Regression", "Master"})
     @Parameters({"os", "browser"})
     public void setup(String os, String br) throws IOException {
 
 
-        logger =  LogManager.getLogger(this.getClass());
+        logger = LogManager.getLogger(this.getClass());
 
         //Loading config.properties file
 
@@ -44,46 +45,59 @@ public class BaseClass {
         p = new Properties();
         p.load(file);
 
-        if(p.getProperty("execution_env").equalsIgnoreCase("remote")){
-            DesiredCapabilities capabilities= new DesiredCapabilities();
+        if (p.getProperty("execution_env").equalsIgnoreCase("remote")) {
+            DesiredCapabilities capabilities = new DesiredCapabilities();
 
-            if(os.equalsIgnoreCase("mac")){
+            if (os.equalsIgnoreCase("mac")) {
                 capabilities.setPlatform(Platform.MAC);
-            }
-            else if (os.equalsIgnoreCase("safari")) {
+            } else if (os.equalsIgnoreCase("windows")) {
                 capabilities.setPlatform(Platform.MAC);
-            }else {
-                System.out.printf("NO os matching");
+            } else {
+                System.out.println("NO os matching");
                 return;
             }
-            switch (br.toLowerCase()){
-                case "chrome": capabilities.setBrowserName("chrome");
+            switch (br.toLowerCase()) {
+                case "chrome":
+                    capabilities.setBrowserName("chrome");
                     break;
-                case "firefox": capabilities.setBrowserName("firefox");
+                case "firefox":
+                    capabilities.setBrowserName("firefox");
                     break;
                 default:
-                    System.out.printf("No matching browser");
+                    System.out.println("No matching browser");
                     return;
             }
-            driver = new RemoteWebDriver(new URL("http://10.0.0.101:4444/wd/hub"),capabilities);
+            driver = new RemoteWebDriver(new URL("http://10.0.0.101:4444/wd/hub"), capabilities);
 
         }
-        if(p.getProperty("execution_env").equalsIgnoreCase("local")){
-            switch ((br.toLowerCase())){
-                case "chrome" : driver= new ChromeDriver();break;
-                case "safari" : driver= new SafariDriver();break;
-                case "firefox": driver= new FirefoxDriver();break;
+        if (p.getProperty("execution_env").equalsIgnoreCase("local")) {
+            switch ((br.toLowerCase())) {
+                case "chrome":
+                    driver = new ChromeDriver();
+                    break;
+                case "safari":
+                    driver = new SafariDriver();
+                    break;
+                case "firefox":
+                    driver = new FirefoxDriver();
+                    break;
                 default:
-                    System.out.printf("rivaled browser name...");
+                    System.out.println("invalid browser name...");
             }
         }
 
-        switch ((br.toLowerCase())){
-            case "chrome" : driver= new ChromeDriver();break;
-            case "safari" : driver= new SafariDriver();break;
-            case "firefox": driver= new FirefoxDriver();break;
+        switch ((br.toLowerCase())) {
+            case "chrome":
+                driver = new ChromeDriver();
+                break;
+            case "safari":
+                driver = new SafariDriver();
+                break;
+            case "firefox":
+                driver = new FirefoxDriver();
+                break;
             default:
-                System.out.printf("rivaled browser name...");
+                System.out.println("invalid browser name...");
                 return;
 
         }
@@ -96,32 +110,34 @@ public class BaseClass {
         driver.get("https://tutorialsninja.com/demo/index.php?route=common/home");
         driver.manage().window().maximize();
     }
-    public String randomeString(){
-        String generatedString= RandomStringUtils.randomAlphabetic(5);
+
+    public String randomeString() {
+        String generatedString = RandomStringUtils.randomAlphabetic(5);
         return generatedString;
     }
-    public String randomeNumber(){
-        String generatedNumber=RandomStringUtils.randomAlphabetic(5);
+
+    public String randomeNumber() {
+        String generatedNumber = RandomStringUtils.randomAlphabetic(5);
         return generatedNumber;
     }
+
     public String randomeAlphaNumeric() {
         String generatedString = RandomStringUtils.randomAlphabetic(5);
         String generatedNumber = RandomStringUtils.randomNumeric(3);
         return (generatedString + "@" + generatedNumber);
     }
+
     public String captureScreen(String tname) throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
         TakesScreenshot takesScreenshot = (TakesScreenshot) driver;
         File sourceFile = takesScreenshot.getScreenshotAs(OutputType.FILE);
 
-        try {
-            FileUtils.copyFile(sourceFile, new File("src/test/resources/screenshots/" + tname +".JPEG"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        sourceFile.renameTo(sourceFile);
-        String targetFilePath = "jpeg";
+        String targetFilePath = "/Users/ahmadraminazizi/IdeaProjects/openCartV12.1/src/test/resources/screenshots/" + tname + "_" + timeStamp + ".png";
+        File targetFile = new File(targetFilePath);
+
+        sourceFile.renameTo(targetFile);
         return targetFilePath;
+
     }
     @AfterClass(groups = {"Sanity", "Regression","Master"})
     public void tearDown(){
